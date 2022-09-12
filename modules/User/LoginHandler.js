@@ -2,6 +2,16 @@
 const { nameREGEX, passwordREGEX, emailREGEX } = require('../Util/Regex.js');
 const validateTheJSON = require('../Util/ValidateTheJson.js');
 
+// DB
+const db = require('../Database/Mongoose.js');
+
+
+function getUserData(data) {
+    const data = db.getUsers(data);
+    console.log(data);
+}
+
+
 function validateTheUser(data) {
     const validated = validateTheJSON(data, (key) => {
         if (key === 'email' || key === 'password') {
@@ -19,5 +29,6 @@ function validateTheUser(data) {
                 throw new ErrorHandler("ValidationError", "Invalid Email Format", 400);
             }
         }
+        getUserData(data);
     }
 }
