@@ -22,27 +22,58 @@ app.set("port", process.env.PORT || 3000);
 // Variable
 const defaultStatus = 400;
 
+// Registration
 app.post("/registration", async (req, res) => {
     const userData = req.body;
     try {
         const status = await Registration(userData);
         const response = new Success("Users Successfully Registered", 201);
-        res.status(response.status).json(response);
+        res.header({
+            "Content-Type": "application/json"
+        }).status(response.status).json(response);
     } catch (error) {
-        res.status(error.status || defaultStatus).json({ status: error.status || defaultStatus, message: error.message, ...error });
+        res.header({
+            "Content-Type": "application/json"
+        }).status(error.status || defaultStatus)
+            .json({ status: error.status || defaultStatus, message: error.message, ...error });
     }
     res.end();
 })
 
-app.post('/login', async (req, res) => {
+
+// Login
+app.get('/login', async (req, res) => {
     const LoginData = req.body;
     try {
         const { status, ...response } = await Login(LoginData);
-        res.status(status).json({ status, response });
+        res.header({
+            "Content-Type": "application/json"
+        }).status(status)
+            .json({ status, response });
     } catch (error) {
-        res.status(error.status || defaultStatus).json({ status: error.status || defaultStatus, message: error.message, ...error });
+        res.header({
+            "Content-Type": "application/json"
+        }).status(error.status || defaultStatus)
+            .json({ status: error.status || defaultStatus, message: error.message, ...error });
     }
     res.end();
+})
+
+
+// Expenses
+app.get('/:UserID/expenses', async function (req, res) {
+    const userID = req.params.UserID;
+    const requestInfo = req.body;
+    try {
+
+    } catch (error) {
+
+    }
+    res.end();
+})
+
+app.post('/:UserID/expenses', async function (req, res) {
+
 })
 
 

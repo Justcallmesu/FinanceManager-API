@@ -43,9 +43,18 @@ async function addNewUsers({ firstname, lastname, password, email, token }) {
     return status;
 }
 
+// Get users info
 async function getUsers({ email }) {
     const foundUser = await users.findOne({ email });
     return foundUser;
+}
+
+// Get Users Expiration
+async function getExpiration(userID) {
+    const foundUser = await users.findOne({ _id: userID });
+
+    const userData = foundUser.toJSON();
+    return userData.token;
 }
 
 async function updateUsersToken({ email }) {
@@ -54,4 +63,4 @@ async function updateUsersToken({ email }) {
     return status;
 }
 
-module.exports = { addNewUsers, getUsers, updateUsersToken };
+module.exports = { addNewUsers, getUsers, getExpiration, updateUsersToken };
