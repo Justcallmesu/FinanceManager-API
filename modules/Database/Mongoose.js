@@ -1,5 +1,10 @@
+// NPM Modules
 const mongoose = require('mongoose');
 const uniqid = require('uniqid');
+
+// Class
+const TokenConstructor = require('../Class/Main/TokenConstructor.js');
+
 
 main().catch((error) => console.log(error));
 
@@ -43,4 +48,10 @@ async function getUsers({ email }) {
     return foundUser;
 }
 
-module.exports = { addNewUsers, getUsers };
+async function updateUsersToken({ email }) {
+    const newToken = new TokenConstructor()
+    const status = await users.updateOne({ email }, { token: newToken });
+    return status;
+}
+
+module.exports = { addNewUsers, getUsers, updateUsersToken };

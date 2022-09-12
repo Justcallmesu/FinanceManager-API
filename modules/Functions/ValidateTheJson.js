@@ -5,9 +5,7 @@ function validateTheJSON(data, callback, propertiesRequirement) {
     let counter = 0;
     for (const key in data) {
         const status = callback(key);
-        if (status) {
-            counter++;
-        }
+        counter++;
     }
 
     if (counter !== propertiesRequirement) {

@@ -6,7 +6,7 @@ const DataConstructor = require('../Class/Main/UserConstructor.js');
 
 // Util
 const { nameREGEX, passwordREGEX, emailREGEX } = require('../Util/Regex.js');
-const validateTheJSON = require('../Util/ValidateTheJson.js');
+const validateTheJSON = require('../Functions/ValidateTheJson.js');
 
 // DB 
 const db = require('../Database/Mongoose.js')
@@ -22,9 +22,7 @@ async function isExist(data) {
 
 function validateTheData(data) {
     const validated = validateTheJSON(data, (key) => {
-        if (key === 'name' || key === 'password' || key === 'email') {
-            return true;
-        } else {
+        if (key !== 'name' && key !== 'password' && key !== 'email') {
             throw new ErrorHandler("ValidationError", "Unknown Property", 400);
         }
     }, 3);
