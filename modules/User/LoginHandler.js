@@ -12,20 +12,27 @@ const validateTheJSON = require('../Functions/ValidateTheJson.js');
 // DB
 const db = require('../Database/Mongoose.js');
 
+function matchData(userData, loginInfo) {
+    const { _id, firstname, lastname, token } = userData;
+    const userInfo = new LoginConstructor(_id, firstname, lastname, token);
+
+    if (userData.password === loginInfo.password) {
+        const Response = new Payload("Data SuccessFully Fetched And Authenticated", 200, userInfo);
+        return Response;
+    }
+
+    throw new ErrorHandler("Authentication Failed", "Password Doesnt Match", 401);
+}
+
 
 async function getUserData(data) {
     await db.updateUsersToken(data);
     const userData = await db.getUsers(data);
 
     if (userData) {
-        const { firstname, lastname, token, _id } = userData;
-
-        const UserInfo = new LoginConstructor(_id, firstname, lastname, token);
-        const Response = new Payload("Data Successfully Fetched", 200, UserInfo);
-
-        return Response;
+        return matchData(userData, data);
     } else {
-        throw new ErrorHandler("Unexisting Data", "There is no Matching Email or Password", 404);
+        throw new ErrorHandler("Unexisting Data", "There is no Matching Email", 404);
     }
 }
 
