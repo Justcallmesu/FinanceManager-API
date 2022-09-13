@@ -23,10 +23,14 @@ const newUserSchema = new mongoose.Schema({
     token: Object
 })
 
+const ExpensesSchema = new mongoose.Schema({
+    UserID: String,
+    ExpensesData: Array
+})
 
 // Database Model
 const users = mongoose.model("users", newUserSchema);
-
+const expenses = mongoose.model('expenses', ExpensesSchema);
 
 // Add New Users
 async function addNewUsers({ firstname, lastname, password, email, token }) {
@@ -52,15 +56,43 @@ async function getUsers({ email }) {
 // Get Users Expiration
 async function getExpiration(userID) {
     const foundUser = await users.findOne({ _id: userID });
-
-    const userData = foundUser.toJSON();
-    return userData.token;
+    if (foundUser) {
+        const userData = foundUser.toJSON();
+        return userData.token;
+    }
+    return null;
 }
 
+// Is user exist and authenticated
+async function isUserExist(userID) {
+    const foundUser = await users.find({ _id: userID });
+    return Boolean(foundUser);
+}
+
+// Update Users Token Expiration
 async function updateUsersToken({ email }) {
     const newToken = new TokenConstructor()
     const status = await users.updateOne({ email }, { token: newToken });
     return status;
 }
 
-module.exports = { addNewUsers, getUsers, getExpiration, updateUsersToken };
+// Get User Expenses
+async function getUserExpenses(userID) {
+    const expensesData = await expenses.findOne({ userID });
+    return expensesData;
+}
+
+module.exports = {
+    // User Operation Module
+    addNewUsers,
+    getUsers,
+    updateUsersToken,
+    isUserExist,
+
+    // Authentication Operation
+    getExpiration,
+
+    // Expenses Operation
+    getUserExpenses
+
+};

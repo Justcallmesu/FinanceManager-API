@@ -9,7 +9,7 @@ function validateTheJSON(data, callback, propertiesRequirement) {
     }
 
     if (counter !== propertiesRequirement) {
-        throw new ErrorHandler("ValidationError", "Missing Data", 400);
+        throw new ErrorHandler("ValidationError", "There are missing data or more", 400);
     }
 
     return true;
