@@ -1,3 +1,6 @@
+// Validation
+const Validation = require('../Functions/ValidateTheRequest.js');
+
 // Class
 const Response = require('../Class/Response/Payload.js');
 
@@ -11,39 +14,16 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 const db = require('../Database/Mongoose.js');
 
 async function getExpenses(userID, requestInfo) {
-    const userExpenses = await db.getUserExpenses(userID);
+    const isValid = validateTheRequest(userID, requestInfo);
+    if (isValid) {
+        const userExpenses = await db.getUserExpenses(userID);
 
-    const serverResponse = new Response('Data SuccessFully Fetched', 200, userExpenses);
-    return serverResponse;
-}
-
-async function validateTheToken(userID, requestInfo) {
-    const timeNow = new Date().getTime();
-    const userToken = await db.getExpiration(userID);
-    const { token } = requestInfo;
-
-    if (userToken.token === token) {
-        if (userToken.expiration <= timeNow) {
-            return getExpenses(userID, requestInfo);
-        } else {
-            throw new ErrorHandler('Expired Token', 'Your Token already expired please Relogin', 401);
-        }
+        const serverResponse = new Response('Data SuccessFully Fetched', 200, userExpenses);
+        return serverResponse;
     }
-
-}
-
-async function validateTheUser(userID, requestInfo) {
-    const validated = validateTheRequest(userID, requestInfo);
-
-    if (validated) {
-        const isExist = await db.isUserExist(userID);
-        if (isExist) {
-            return validateTheToken(userID, requestInfo);
-        }
-        throw new ErrorHandler('Unexisting User', 'User Info Doesnt Exist please check data again', 404);
-    }
+    throw new ErrorHandler('Authentication Failed', 'Request Failed authentication Test', 401);
 }
 
 
 
-module.exports = validateTheUser;
+module.exports = getExpenses;

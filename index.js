@@ -5,7 +5,7 @@ const Success = require('./modules/Class/Response/Response.js');
 const Registration = require('./modules/User/RegistrationHandler');
 const Login = require('./modules/User/LoginHandler');
 const ExpensesGetter = require('./modules/Get/ExpensesGetter.js');
-
+const ExpensesPost = require('./modules/Post/ExpensesPost.js');
 
 // NPM Modules
 const express = require('express');
@@ -73,7 +73,16 @@ app.get('/:UserID/expenses', async function (req, res) {
 })
 
 app.post('/:UserID/expenses', async function (req, res) {
+    const userID = req.params.UserID;
+    const requestInfo = req.body;
 
+    try {
+        const { status, ...data } = await ExpensesPost(userID, requestInfo);
+        res.status(status).header(Headers).json(data);
+    } catch (error) {
+        res.status(error.status || defaultStatus).header(Headers).json(error);
+    }
+    res.end();
 })
 
 

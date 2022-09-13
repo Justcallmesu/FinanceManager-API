@@ -24,7 +24,9 @@ const newUserSchema = new mongoose.Schema({
 })
 
 const ExpensesSchema = new mongoose.Schema({
+    _id: String,
     UserID: String,
+    totalAmount: Number,
     ExpensesData: Array
 })
 
@@ -76,11 +78,61 @@ async function updateUsersToken({ email }) {
     return status;
 }
 
+// =================== Expenses Section ======================
+
 // Get User Expenses
 async function getUserExpenses(userID) {
     const expensesData = await expenses.findOne({ userID });
     return expensesData;
 }
+
+// Is Exist 
+async function isExpensesExist(UserID) {
+    const isExist = await expenses.findOne({ UserID });
+
+    if (isExist) return true;
+    return false;
+}
+
+// Update User Expenses
+async function updateUserExpenses(UserID, expensesData) {
+    const { amount } = expensesData;
+    const { acknowledged, matchedCount } = await expenses.updateOne({ UserID },
+        {
+            $inc: {
+                totalAmount: amount
+            },
+            $push: {
+                ExpensesData: expensesData
+            }
+        }
+    )
+    return { acknowledged, matchedCount };
+}
+
+// Create User Expenses 
+async function createUserExpenses(UserID, expensesData) {
+    const { amount } = expensesData;
+    const newExpenses = new expenses({
+        _id: uniqid('EX-'),
+        UserID,
+        totalAmount: amount,
+        ExpensesData: [
+            expensesData
+        ]
+    })
+
+    const status = await newExpenses.save();
+
+    if (status) {
+        const { _id } = status;
+        return {
+            _id
+        }
+    }
+    return false;
+}
+
 
 module.exports = {
     // User Operation Module
@@ -93,6 +145,9 @@ module.exports = {
     getExpiration,
 
     // Expenses Operation
-    getUserExpenses
+    getUserExpenses,
+    isExpensesExist,
+    updateUserExpenses,
+    createUserExpenses
 
 };

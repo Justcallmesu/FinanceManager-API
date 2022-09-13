@@ -1,3 +1,24 @@
+// Error
+const ErrorHandler = require('../Class/Error/ErrorHandler.js');
+
+// Db
+const db = require('../Database/Mongoose.js');
+
+async function validateTheToken(userID, requestInfo) {
+    const timeNow = new Date().getTime();
+    const userToken = await db.getExpiration(userID);
+    const { token } = requestInfo;
+
+    if (userToken.token === token) {
+        if (userToken.expiration <= timeNow) {
+            return true;
+        } else {
+            throw new ErrorHandler('Expired Token', 'Your Token already expired please Relogin', 401);
+        }
+    }
+
+}
+
 async function validateTheRequest(userID, requestInfo) {
     let isTokenExist = false;
 
@@ -20,4 +41,16 @@ async function validateTheRequest(userID, requestInfo) {
     return true;
 }
 
-module.exports = validateTheRequest;
+async function validateTheUser(userID, requestInfo) {
+    const validated = validateTheRequest(userID, requestInfo);
+
+    if (validated) {
+        const isExist = await db.isUserExist(userID);
+        if (isExist) {
+            return validateTheToken(userID, requestInfo);
+        }
+        throw new ErrorHandler('Unexisting User', 'User Info Doesnt Exist please check data again', 404);
+    }
+}
+
+module.exports = validateTheUser;
