@@ -5,15 +5,14 @@ const Success = require('./modules/Class/Response/Response.js');
 const Registration = require('./modules/User/RegistrationHandler');
 const Login = require('./modules/User/LoginHandler');
 
-const ExpensesGetter = require('./modules/Get/ExpensesGetter.js');
 const ExpensesPost = require('./modules/Post/ExpensesPost.js');
-
-const BudgetGetter = require('./modules/Get/BudgetGetter.js');
 
 // NPM Modules
 const express = require('express');
 const bodyParser = require('body-parser');
 
+// Functions
+const getFunction = require('./modules/Get/GetFunction.js');
 
 // Framework Initialization
 const app = express();
@@ -67,7 +66,7 @@ app.get('/:UserID/expenses', async function (req, res) {
     const userID = req.params.UserID;
     const requestInfo = req.body;
     try {
-        const { status, ...data } = await ExpensesGetter(userID, requestInfo);
+        const { status, ...data } = await getFunction(userID, requestInfo, "getUserExpenses");
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         res.status(error.status || defaultStatus).header(Headers).send(error);
@@ -95,7 +94,7 @@ app.get('/:UserID/budgets', async function (req, res) {
     const requestInfo = req.body;
 
     try {
-        const { status, ...data } = await BudgetGetter(UserID, requestInfo);
+        const { status, ...data } = await getFunction(UserID, requestInfo, 'getUserBudget');
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         res.status(error.status || defaultStatus).header(Headers).json(error);
