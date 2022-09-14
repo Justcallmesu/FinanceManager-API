@@ -13,10 +13,10 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 // Db
 const db = require('../Database/Mongoose.js');
 
-async function getExpenses(userID, requestInfo) {
+async function getBudget(userID, requestInfo) {
     const isValid = await validateTheRequest(userID, requestInfo);
     if (isValid) {
-        const userExpenses = await db.getUserExpenses(userID);
+        const userExpenses = await db.getUserBudget(userID);
 
         const serverResponse = new Response('Data SuccessFully Fetched', 200, userExpenses);
         return serverResponse;
@@ -26,4 +26,4 @@ async function getExpenses(userID, requestInfo) {
 
 
 
-module.exports = getExpenses;
+module.exports = getBudget;

@@ -30,9 +30,17 @@ const ExpensesSchema = new mongoose.Schema({
     ExpensesData: Array
 })
 
+const budgetSchema = new mongoose.Schema({
+    _id: String,
+    UserID: String,
+    totalBudget: Number,
+    BudgetData: Array
+})
+
 // Database Model
 const users = mongoose.model("users", newUserSchema);
 const expenses = mongoose.model('expenses', ExpensesSchema);
+const budgets = mongoose.model('budgets', budgetSchema);
 
 // Add New Users
 async function addNewUsers({ firstname, lastname, password, email, token }) {
@@ -133,6 +141,14 @@ async function createUserExpenses(UserID, expensesData) {
     return false;
 }
 
+// =================== Budget Section ======================
+
+// Get User Budget
+async function getUserBudget(UserID) {
+    const data = await budgets.find({ UserID });
+    return data;
+}
+
 
 module.exports = {
     // User Operation Module
@@ -148,6 +164,9 @@ module.exports = {
     getUserExpenses,
     isExpensesExist,
     updateUserExpenses,
-    createUserExpenses
+    createUserExpenses,
+
+    //Budget Operation
+    getUserBudget
 
 };

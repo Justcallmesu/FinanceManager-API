@@ -42,7 +42,7 @@ async function validateTheRequest(userID, requestInfo) {
 }
 
 async function validateTheUser(userID, requestInfo) {
-    const validated = validateTheRequest(userID, requestInfo);
+    const validated = await validateTheRequest(userID, requestInfo);
 
     if (validated) {
         const isExist = await db.isUserExist(userID);

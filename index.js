@@ -4,8 +4,11 @@ const Success = require('./modules/Class/Response/Response.js');
 // Modules
 const Registration = require('./modules/User/RegistrationHandler');
 const Login = require('./modules/User/LoginHandler');
+
 const ExpensesGetter = require('./modules/Get/ExpensesGetter.js');
 const ExpensesPost = require('./modules/Post/ExpensesPost.js');
+
+const BudgetGetter = require('./modules/Get/BudgetGetter.js');
 
 // NPM Modules
 const express = require('express');
@@ -50,7 +53,7 @@ app.get('/login', async (req, res) => {
     try {
         const { status, ...response } = await Login(LoginData);
         res.header(Headers).status(status)
-            .json({ status, response });
+            .json({ status, ...response });
     } catch (error) {
         res.header(Headers).status(error.status || defaultStatus)
             .json({ status: error.status || defaultStatus, message: error.message, ...error });
@@ -65,7 +68,7 @@ app.get('/:UserID/expenses', async function (req, res) {
     const requestInfo = req.body;
     try {
         const { status, ...data } = await ExpensesGetter(userID, requestInfo);
-        res.status(status).header(Headers).json(data);
+        res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         res.status(error.status || defaultStatus).header(Headers).send(error);
     }
@@ -78,7 +81,22 @@ app.post('/:UserID/expenses', async function (req, res) {
 
     try {
         const { status, ...data } = await ExpensesPost(userID, requestInfo);
-        res.status(status).header(Headers).json(data);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        res.status(error.status || defaultStatus).header(Headers).json(error);
+    }
+    res.end();
+})
+
+
+// Budget
+app.get('/:UserID/budgets', async function (req, res) {
+    const UserID = req.params.UserID;
+    const requestInfo = req.body;
+
+    try {
+        const { status, ...data } = await BudgetGetter(UserID, requestInfo);
+        res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         res.status(error.status || defaultStatus).header(Headers).json(error);
     }
