@@ -1,6 +1,6 @@
 const uniqid = require('uniqid');
 
-class ExpensesConstructor {
+class BudgetExpensesConstructor {
     constructor(name, amount, date) {
         this.id = uniqid();
         this.name = name;
@@ -9,4 +9,4 @@ class ExpensesConstructor {
     }
 }
 
-module.exports = ExpensesConstructor;
+module.exports = BudgetExpensesConstructor;

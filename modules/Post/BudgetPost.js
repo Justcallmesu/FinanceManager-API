@@ -11,19 +11,19 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 // Db
 const db = require('../Database/Mongoose.js');
 
-async function addExpenses(UserID, requestInfo) {
+async function addBudget(UserID, requestInfo) {
     const isValid = await validateTheRequest(UserID, requestInfo);
     if (isValid) {
         let status = null;
         const { data: { name, amount, date } } = requestInfo;
 
         const expensesData = new BudgetExpensesConstructor(name, amount, date);
-        const doesExist = await db.isExpensesExist(UserID);
+        const doesExist = await db.isBudgetExist(UserID);
 
         if (doesExist) {
-            status = await db.updateUserExpenses(UserID, expensesData);
+            status = await db.updateUserBudget(UserID, expensesData);
         } else {
-            status = await db.createUserExpenses(UserID, expensesData);
+            status = await db.createUserBudget(UserID, expensesData);
         }
         const serverResponse = new Response("Data Successfully Inserted", 200, status);
 
@@ -32,4 +32,4 @@ async function addExpenses(UserID, requestInfo) {
     throw new ErrorHandler('Authentication Failed', 'Request Failed authentication Test', 401);
 }
 
-module.exports = addExpenses;
+module.exports = addBudget;
