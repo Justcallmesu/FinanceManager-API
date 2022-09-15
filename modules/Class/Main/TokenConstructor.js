@@ -1,5 +1,5 @@
 // Functions
-const getExpiration = require('../../Functions/GetExpiration.js');
+const getExpiration = require('../../Functions/Getter/GetExpiration.js');
 
 // NPM Module
 const uniqid = require('uniqid');

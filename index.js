@@ -40,23 +40,23 @@ app.post("/registration", async (req, res) => {
         const response = new Success("Users Successfully Registered", 201);
         res.header(Headers).status(response.status).json(response);
     } catch (error) {
-        res.header(Headers).status(error.status || defaultStatus)
-            .json({ status: error.status || defaultStatus, message: error.message, ...error });
+        const { message, status } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();
 })
 
 
 // Login
-app.get('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     const LoginData = req.body;
     try {
         const { status, ...response } = await Login(LoginData);
         res.header(Headers).status(status)
             .json({ status, ...response });
     } catch (error) {
-        res.header(Headers).status(error.status || defaultStatus)
-            .json({ status: error.status || defaultStatus, message: error.message, ...error });
+        const { message, status } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();
 })
@@ -70,7 +70,8 @@ app.get('/:UserID/expenses', async function (req, res) {
         const { status, ...data } = await getFunction(userID, requestInfo, "getUserExpenses");
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        res.status(error.status || defaultStatus).header(Headers).send(error);
+        const { message, status } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();
 })
@@ -83,7 +84,8 @@ app.post('/:UserID/expenses', async function (req, res) {
         const { status, ...data } = await ExpensesPost(userID, requestInfo);
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        res.status(error.status || defaultStatus).header(Headers).json(error);
+        const { message, status } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();
 })
@@ -98,7 +100,9 @@ app.get('/:UserID/budgets', async function (req, res) {
         const { status, ...data } = await getFunction(UserID, requestInfo, 'getUserBudget');
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        res.status(error.status || defaultStatus).header(Headers).json(error);
+        const { message, status } = error;
+        console.log(message);
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();
 })
@@ -111,7 +115,8 @@ app.post('/:UserID/budgets', async function (req, res) {
         const { status, ...data } = await BudgetPost(UserID, requestInfo);
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        res.status(error.status || defaultStatus).header(Headers).json(error);
+        const { message, status } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();
 })

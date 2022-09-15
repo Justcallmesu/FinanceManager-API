@@ -6,7 +6,7 @@ const DataConstructor = require('../Class/Main/UserConstructor.js');
 
 // Util
 const { nameREGEX, passwordREGEX, emailREGEX } = require('../Util/Regex.js');
-const validateTheJSON = require('../Functions/ValidateTheJson.js');
+const validateTheJSON = require('../Functions/Validation-Main/ValidateTheJson.js');
 
 // DB 
 const db = require('../Database/Mongoose.js')

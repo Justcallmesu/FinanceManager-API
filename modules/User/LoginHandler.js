@@ -7,7 +7,7 @@ const Payload = require('../Class/Response/Payload.js');
 
 // Util
 const { passwordREGEX, emailREGEX } = require('../Util/Regex.js');
-const validateTheJSON = require('../Functions/ValidateTheJson.js');
+const validateTheJSON = require('../Functions/Validation-Main/ValidateTheJson.js');
 
 // DB
 const db = require('../Database/Mongoose.js');

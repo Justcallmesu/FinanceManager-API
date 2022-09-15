@@ -1,5 +1,5 @@
 // Error Handler
-const ErrorHandler = require('../Class/Error/ErrorHandler.js');
+const ErrorHandler = require('../../Class/Error/ErrorHandler.js');
 
 function validateTheJSON(data, callback, propertiesRequirement) {
     let counter = 0;
