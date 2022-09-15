@@ -13,13 +13,9 @@ async function validateTheRequest(userID, requestInfo) {
     }
     // The Request info should have a Token for requesting or will denied
     for (const key in requestInfo) {
-        if (key === 'token') {
-            isTokenExist = true;
-            break;
+        if (key !== 'token' && key !== 'data') {
+            throw new ErrorHandler('Unknown Data', 'Please only include required data [Token,data]', 401);
         }
-    }
-    if (!isTokenExist) {
-        throw new ErrorHandler('Missing Data', 'Please include token when requesting data', 401);
     }
 
     const isUserExist = await validateTheUser(userID, requestInfo);

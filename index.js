@@ -13,7 +13,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 // Functions
-const getFunction = require('./modules/Get/GetFunction.js');
+const getFunction = require('./modules/Database-Getter/GetFunction.js');
 
 // Framework Initialization
 const app = express();
@@ -101,7 +101,6 @@ app.get('/:UserID/budgets', async function (req, res) {
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         const { message, status } = error;
-        console.log(message);
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();

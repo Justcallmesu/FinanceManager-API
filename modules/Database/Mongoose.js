@@ -89,8 +89,10 @@ async function updateUsersToken({ email }) {
 // =================== Expenses Section ======================
 
 // Get User Expenses
-async function getUserExpenses(userID) {
-    const expensesData = await expenses.findOne({ userID });
+async function getUserExpenses(userID, page, itemsPerPage) {
+    const startingPage = (page - 1) * itemsPerPage;
+    const range = startingPage + itemsPerPage;
+    const expensesData = await expenses.findOne({ userID }).where("ExpensesData").slice([startingPage, range]);;
     return expensesData;
 }
 
@@ -144,8 +146,10 @@ async function createUserExpenses(UserID, expensesData) {
 // =================== Budget Section ======================
 
 // Get User Budget
-async function getUserBudget(UserID) {
-    const data = await budgets.findOne({ UserID });
+async function getUserBudget(UserID, page, itemsPerPage) {
+    const startingPage = (page - 1) * itemsPerPage;
+    const range = startingPage + itemsPerPage;
+    const data = await budgets.findOne({ UserID }).where("BudgetData").slice([startingPage, range]);
     return data;
 }
 
@@ -162,7 +166,7 @@ async function isBudgetExist(UserID) {
 async function createUserBudget(UserID, newData) {
     const { amount } = newData;
     const newBudget = new budgets({
-        _id: uniqid(),
+        _id: uniqid("BT"),
         UserID,
         totalBudget: amount,
         BudgetData: [newData]

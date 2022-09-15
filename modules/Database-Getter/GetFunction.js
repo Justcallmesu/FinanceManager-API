@@ -2,7 +2,7 @@
 const Response = require('../Class/Response/Payload.js');
 
 // Functions
-const validateTheRequest = require('../Functions/Validation-Main/ValidateThePost.js');
+const validateTheRequest = require('../Functions/Validation-Main/ValidateTheRequest.js');
 
 // Error
 const ErrorHandler = require('../Class/Error/ErrorHandler.js');
@@ -12,10 +12,12 @@ const db = require('../Database/Mongoose.js');
 
 async function getExpenses(userID, requestInfo, collections) {
     const isValid = await validateTheRequest(userID, requestInfo);
-    if (isValid) {
-        const userExpenses = await db[collections](userID);
+    const { page, itemsPerPage } = requestInfo;
 
-        const serverResponse = new Response('Data SuccessFully Fetched', 200, userExpenses);
+    if (isValid) {
+        const userData = await db[collections](userID, page, itemsPerPage);
+
+        const serverResponse = new Response('Data SuccessFully Fetched', 200, userData);
         return serverResponse;
     }
     throw new ErrorHandler('Authentication Failed', 'Request Failed authentication Test', 401);

@@ -1,54 +1,32 @@
 // Error
 const ErrorHandler = require('../../Class/Error/ErrorHandler.js')
 
+// Functions
+const validateTheUser = require('../../Functions/Validation-Partials/ValidateTheUser.js')
+const validateTheToken = require('../../Functions/Validation-Partials/ValidateTheToken.js')
+
 // Db
 const db = require('../../Database/Mongoose.js');
 
-async function validateTheToken(userID, requestInfo) {
-    const timeNow = new Date().getTime();
-    const userToken = await db.getExpiration(userID);
-    const { token } = requestInfo;
+async function validateTheRequest(UserID, requestInfo) {
+    let counter = 0;
+    const RequiredProperties = 3;
 
-    if (userToken.token === token) {
-        if (userToken.expiration <= timeNow) {
-            return true;
-        } else {
-            throw new ErrorHandler('Expired Token', 'Your Token already expired please Relogin', 401);
-        }
-    }
-}
-
-async function validateTheRequest(userID, requestInfo) {
-    let isTokenExist = false;
-
-    if (!userID) {
-        throw new Error('Missing Data', 'Please Include User ID when you want to request a data', 401);
-    }
-
-    // The Request info should have a Token for requesting or will denied
     for (const key in requestInfo) {
-        if (key === 'token') {
-            isTokenExist = true;
-            break;
+        if (key !== 'token' && key !== 'page' && key !== 'itemsPerPage') {
+            throw new ErrorHandler('Unknown Data', 'Please only include required data', 401);
         }
+        counter++;
     }
 
-    if (!isTokenExist) {
-        throw new ErrorHandler('Missing Data', 'Please include token when requesting data', 401);
+    if (counter !== RequiredProperties) {
+        throw new ErrorHandler('Missing Data', 'Please include required data [Token,page,itemsPerPage]', 401);
     }
 
-    return true;
+    const isUserExist = await validateTheUser(UserID, requestInfo);
+    const isTokenValidated = await validateTheToken(UserID, requestInfo);
+
+    if (isTokenValidated && isUserExist) return true;
 }
 
-async function validateTheUser(userID, requestInfo) {
-    const validated = await validateTheRequest(userID, requestInfo);
-
-    if (validated) {
-        const isExist = await db.isUserExist(userID);
-        if (isExist) {
-            console.log(test);
-            return validateTheToken(userID, requestInfo);
-        }
-        throw new ErrorHandler('Unexisting User', 'User Info Doesnt Exist please check data again', 404);
-    }
-}
+module.exports = validateTheRequest;
