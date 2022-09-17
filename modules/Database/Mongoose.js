@@ -104,8 +104,8 @@ async function isExpensesExist(UserID) {
     return false;
 }
 
-// Update User Expenses
-async function updateUserExpenses(UserID, expensesData) {
+// Push User Expenses
+async function pushUserExpenses(UserID, expensesData) {
     const { amount } = expensesData;
     const { acknowledged, matchedCount } = await expenses.updateOne({ UserID },
         {
@@ -177,9 +177,25 @@ async function createUserBudget(UserID, newData) {
     return { _id };
 }
 
+// Get Budget Amount
+async function getBudgetAmount(UserID, BudgetID) {
+    const data = await budgets.findOne({ UserID }, {
+        "BudgetData": {
+            $elemMatch: {
+                id: BudgetID
+            }
+        }
+    })
+    if (!data.BudgetData) {
+        return null;
+    } else {
+        return data.BudgetData[0].amount;
+    }
 
-// Update User Budget
-async function updateUserBudget(UserID, newData) {
+}
+
+// Push User Budget
+async function pushUserBudget(UserID, newData) {
     const { amount } = newData;
     const { acknowledged, matchedCount } = await budgets.updateOne({ UserID }, {
         $inc: {
@@ -193,7 +209,19 @@ async function updateUserBudget(UserID, newData) {
     return { acknowledged, matchedCount };
 }
 
+async function updateUserBudget(UserID, newData, totalAmount) {
+    const { amount, id } = newData;
+    const { acknowledged, matchedCount } = await budgets.updateOne({ UserID, "BudgetData.id": id }, {
+        $inc: {
+            totalBudget: totalAmount
+        },
+        $set: {
+            "BudgetData.$.amount": amount
+        }
+    })
 
+    return { acknowledged, matchedCount };
+}
 
 
 module.exports = {
@@ -208,14 +236,16 @@ module.exports = {
 
     // Expenses Operation
     getUserExpenses,
-    isExpensesExist,
-    updateUserExpenses,
     createUserExpenses,
+    pushUserExpenses,
+    isExpensesExist,
 
     //Budget Operation
     getUserBudget,
-    isBudgetExist,
+    createUserBudget,
+    pushUserBudget,
     updateUserBudget,
-    createUserBudget
+    getBudgetAmount,
+    isBudgetExist,
 
 };

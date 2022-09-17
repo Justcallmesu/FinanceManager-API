@@ -8,6 +8,8 @@ const Login = require('./modules/User/LoginHandler');
 const ExpensesPost = require('./modules/Post/ExpensesPost.js');
 const BudgetPost = require('./modules/Post/BudgetPost.js');
 
+const updateBudget = require('./modules/Put/UpdateBudget.js');
+
 // NPM Modules
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -115,6 +117,20 @@ app.post('/:UserID/budgets', async function (req, res) {
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         const { message, status } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
+    }
+    res.end();
+})
+
+app.put('/:UserID/budgets', async function (req, res) {
+    const UserID = req.params.UserID;
+    const requestInfo = req.body;
+
+    try {
+        const { status, ...data } = await updateBudget(UserID, requestInfo);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        const { status, message } = error;
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();
