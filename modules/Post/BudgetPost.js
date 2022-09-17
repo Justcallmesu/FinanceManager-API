@@ -21,7 +21,7 @@ async function addBudget(UserID, requestInfo) {
         const doesExist = await db.isBudgetExist(UserID);
 
         if (doesExist) {
-            status = await db.updateUserBudget(UserID, expensesData);
+            status = await db.pushUserBudget(UserID, expensesData);
         } else {
             status = await db.createUserBudget(UserID, expensesData);
         }

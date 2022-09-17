@@ -21,7 +21,7 @@ async function addExpenses(UserID, requestInfo) {
         const doesExist = await db.isExpensesExist(UserID);
 
         if (doesExist) {
-            status = await db.updateUserExpenses(UserID, expensesData);
+            status = await db.pushUserExpenses(UserID, expensesData);
         } else {
             status = await db.createUserExpenses(UserID, expensesData);
         }
