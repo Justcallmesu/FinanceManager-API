@@ -9,6 +9,7 @@ const ExpensesPost = require('./modules/Post/ExpensesPost.js');
 const BudgetPost = require('./modules/Post/BudgetPost.js');
 
 const updateBudget = require('./modules/Put/UpdateBudget.js');
+const updateExpenses = require('./modules/Put/UpdateExpenses.js');
 
 // NPM Modules
 const express = require('express');
@@ -92,6 +93,20 @@ app.post('/:UserID/expenses', async function (req, res) {
     res.end();
 })
 
+app.put('/:UserID/expenses', async function (req, res) {
+    const UserID = req.params.UserID;
+    const requestInfo = req.body;
+
+    try {
+        const { status, ...data } = await updateExpenses(UserID, requestInfo);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        console.log(error);
+        const { status, message } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
+    }
+    res.end();
+})
 
 // Budget
 app.get('/:UserID/budgets', async function (req, res) {
