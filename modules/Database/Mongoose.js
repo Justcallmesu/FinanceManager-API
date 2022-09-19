@@ -172,6 +172,14 @@ async function updateuserExpenses(UserID, newData, totalAmount) {
     return { acknowledged, matchedCount };
 }
 
+// Delete User Expenses
+async function deleteUserExpenses(UserID, itemsID, totalAmount) {
+    const { modifiedCount, matchedCount, acknowledged } = await expenses.updateOne({ UserID }, {
+        $inc: { totalAmount },
+        $pull: { ExpensesData: { id: itemsID } }
+    })
+    return { modifiedCount, matchedCount, acknowledged };
+}
 
 // =================== Budget Section ======================
 
@@ -253,6 +261,14 @@ async function updateUserBudget(UserID, newData, totalAmount) {
     return { acknowledged, matchedCount };
 }
 
+// Delete User Budget
+async function deleteUserBudget(UserID, itemsID, totalAmount) {
+    const { modifiedCount, matchedCount, acknowledged } = await budgets.updateOne({ UserID }, {
+        $inc: { totalBudget: totalAmount },
+        $pull: { BudgetData: { id: itemsID } }
+    })
+    return { modifiedCount, matchedCount, acknowledged };
+}
 
 module.exports = {
     // User Operation Module
@@ -270,6 +286,7 @@ module.exports = {
     createUserExpenses,
     pushUserExpenses,
     updateuserExpenses,
+    deleteUserExpenses,
     isExpensesExist,
 
     //Budget Operation
@@ -279,5 +296,6 @@ module.exports = {
     updateUserBudget,
     getBudgetAmount,
     isBudgetExist,
+    deleteUserBudget
 
 };
