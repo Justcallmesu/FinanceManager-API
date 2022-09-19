@@ -163,7 +163,7 @@ async function updateuserExpenses(UserID, newData, totalAmount) {
     const { id } = newData;
     const { acknowledged, matchedCount } = await expenses.updateOne({ UserID, "ExpensesData.id": id }, {
         $inc: {
-            totalBudget: totalAmount
+            totalAmount
         },
         $set: {
             "ExpensesData.$": newData
