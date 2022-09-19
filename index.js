@@ -10,12 +10,10 @@ const ExpensesPost = require('./modules/Post/ExpensesPost.js');
 const BudgetPost = require('./modules/Post/BudgetPost.js');
 
 // Put
-const updateBudget = require('./modules/Put/UpdateBudget.js');
-const updateExpenses = require('./modules/Put/UpdateExpenses.js');
+const updateFunction = require('./modules/Put/UpdateFunction.js');
 
 // Delete
-const deleteBudget = require('./modules/Delete/BudgetDelete.js');
-const deleteExpenses = require('./modules/Delete/ExpensesDelete.js')
+const deleteFunctions = require('./modules/Delete/DeleteFunction.js');
 
 // NPM Modules
 const express = require('express');
@@ -104,10 +102,9 @@ app.put('/:UserID/expenses', async function (req, res) {
     const requestInfo = req.body;
 
     try {
-        const { status, ...data } = await updateExpenses(UserID, requestInfo);
+        const { status, ...data } = await updateFunction(UserID, requestInfo, 'expenses');
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        console.log(error);
         const { status, message } = error;
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
@@ -120,10 +117,9 @@ app.delete('/:UserID/expenses', async function (req, res) {
     const requestInfo = req.body;
 
     try {
-        const { status, ...data } = await deleteExpenses(UserID, requestInfo);
+        const { status, ...data } = await deleteFunctions(UserID, requestInfo, 'expenses');
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        console.log(error);
         const { status, message } = error;
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
@@ -164,7 +160,7 @@ app.put('/:UserID/budgets', async function (req, res) {
     const requestInfo = req.body;
 
     try {
-        const { status, ...data } = await updateBudget(UserID, requestInfo);
+        const { status, ...data } = await updateFunction(UserID, requestInfo);
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         const { status, message } = error;
@@ -178,10 +174,9 @@ app.delete('/:UserID/budgets', async function (req, res) {
     const requestInfo = req.body;
 
     try {
-        const { status, ...data } = await deleteBudget(UserID, requestInfo);
+        const { status, ...data } = await deleteFunctions(UserID, requestInfo);
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        console.log(error);
         const { status, message } = error;
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
