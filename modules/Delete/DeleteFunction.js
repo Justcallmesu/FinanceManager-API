@@ -7,17 +7,27 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 // DB
 const db = require('../Database/Mongoose.js');
 
-async function deleteExpenses(UserID, requestInfo) {
+async function deleteFunctions(UserID, requestInfo, dataType) {
+    let getter = null;
+    let method = null;
+
+    if (dataType === 'expenses') {
+        getter = "getExpensesAmount";
+        method = "deleteUserExpenses";
+    } else {
+        getter = "getBudgetAmount";
+        method = "deleteUserBudget";
+    }
     const { itemsID } = requestInfo;
-    const itemsAmount = -(await db.getExpensesAmount(UserID, itemsID));
+    const itemsAmount = -(await db[getter](UserID, itemsID));
 
     if (!itemsAmount) {
         throw new ErrorHandler("Unexisting Data", "Data does not exist in the database", 404);
     }
 
-    const status = await db.deleteUserExpenses(UserID, itemsID, itemsAmount);
+    const status = await (db[method](UserID, itemsID, itemsAmount));
     const serverResponse = new Response('Data SuccessFully Deleted', 200, status);
     return serverResponse;
 }
 
-module.exports = deleteExpenses;
+module.exports = deleteFunctions;
