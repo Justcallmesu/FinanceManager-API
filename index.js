@@ -105,7 +105,6 @@ app.put('/:UserID/expenses', async function (req, res) {
         const { status, ...data } = await updateFunction(UserID, requestInfo, 'expenses');
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        console.log(error);
         const { status, message } = error;
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
@@ -121,7 +120,6 @@ app.delete('/:UserID/expenses', async function (req, res) {
         const { status, ...data } = await deleteFunctions(UserID, requestInfo, 'expenses');
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        console.log(error);
         const { status, message } = error;
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
@@ -179,7 +177,6 @@ app.delete('/:UserID/budgets', async function (req, res) {
         const { status, ...data } = await deleteFunctions(UserID, requestInfo);
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
-        console.log(error);
         const { status, message } = error;
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }

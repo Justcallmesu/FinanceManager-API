@@ -7,7 +7,15 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 // DB
 const db = require('../Database/Mongoose.js');
 
+// Validation
+const validateTheToken = require('../Functions/Validation-Partials/ValidateTheToken.js');
+const validateTheUser = require('../Functions/Validation-Partials/ValidateTheUser.js');
+
 async function deleteFunctions(UserID, requestInfo, deleteTarget) {
+
+    validateTheToken(UserID, requestInfo);
+    validateTheUser(UserID);
+
     let getter = null;
     let method = null;
 
