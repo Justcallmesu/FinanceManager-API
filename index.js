@@ -10,8 +10,7 @@ const ExpensesPost = require('./modules/Post/ExpensesPost.js');
 const BudgetPost = require('./modules/Post/BudgetPost.js');
 
 // Put
-const updateBudget = require('./modules/Put/UpdateBudget.js');
-const updateExpenses = require('./modules/Put/UpdateExpenses.js');
+const updateFunction = require('./modules/Put/UpdateFunction.js');
 
 // Delete
 const deleteFunctions = require('./modules/Delete/DeleteFunction.js');
@@ -103,7 +102,7 @@ app.put('/:UserID/expenses', async function (req, res) {
     const requestInfo = req.body;
 
     try {
-        const { status, ...data } = await updateExpenses(UserID, requestInfo);
+        const { status, ...data } = await updateFunction(UserID, requestInfo, 'expenses');
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         console.log(error);
@@ -163,7 +162,7 @@ app.put('/:UserID/budgets', async function (req, res) {
     const requestInfo = req.body;
 
     try {
-        const { status, ...data } = await updateBudget(UserID, requestInfo);
+        const { status, ...data } = await updateFunction(UserID, requestInfo);
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         const { status, message } = error;

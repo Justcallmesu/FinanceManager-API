@@ -7,17 +7,18 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 // DB
 const db = require('../Database/Mongoose.js');
 
-async function deleteFunctions(UserID, requestInfo, dataType) {
+async function deleteFunctions(UserID, requestInfo, deleteTarget) {
     let getter = null;
     let method = null;
 
-    if (dataType === 'expenses') {
+    if (deleteTarget === 'expenses') {
         getter = "getExpensesAmount";
         method = "deleteUserExpenses";
     } else {
         getter = "getBudgetAmount";
         method = "deleteUserBudget";
     }
+
     const { itemsID } = requestInfo;
     const itemsAmount = -(await db[getter](UserID, itemsID));
 
