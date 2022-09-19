@@ -7,11 +7,12 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 // DB
 const db = require('../Database/Mongoose.js');
 
-async function updateBudget(UserID, requestInfo) {
+async function updateExpenses(UserID, requestInfo) {
     const { data: { id, name, amount, date } } = requestInfo;
     const oldAmount = await db.getExpensesAmount(UserID, id);
+
     if (!oldAmount) {
-        throw new ErrorHandler("Unexisting Data", "There is no matching data in your budget", 404);
+        throw new ErrorHandler("Unexisting Data", "There is no matching data in your Expenses", 404);
     }
 
     const newData = {
@@ -30,4 +31,4 @@ async function updateBudget(UserID, requestInfo) {
 
 }
 
-module.exports = updateBudget;
+module.exports = updateExpenses;

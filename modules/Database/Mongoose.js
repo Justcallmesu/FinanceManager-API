@@ -104,8 +104,7 @@ async function getExpensesAmount(UserID, ExpensesID) {
             }
         }
     })
-
-    if (!data) {
+    if (!data.ExpensesData.length) {
         return null;
     } else {
         return data.ExpensesData[0].amount;
@@ -217,7 +216,7 @@ async function getBudgetAmount(UserID, BudgetID) {
             }
         }
     })
-    if (!data) {
+    if (!data.BudgetData.length) {
         return null;
     } else {
         return data.BudgetData[0].amount;
