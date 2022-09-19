@@ -256,6 +256,7 @@ async function updateUserBudget(UserID, newData, totalAmount) {
 // Delete User Budget
 async function deleteUserBudget(UserID, itemsID, totalAmount) {
     const { modifiedCount, matchedCount, acknowledged } = await budgets.updateOne({ UserID }, {
+        $inc: { totalBudget: totalAmount },
         $pull: { BudgetData: { id: itemsID } }
     })
     return { modifiedCount, matchedCount, acknowledged };
