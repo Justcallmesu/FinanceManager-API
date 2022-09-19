@@ -172,6 +172,14 @@ async function updateuserExpenses(UserID, newData, totalAmount) {
     return { acknowledged, matchedCount };
 }
 
+// Delete User Expenses
+async function deleteUserExpenses(UserID, itemsID, totalAmount) {
+    const { modifiedCount, matchedCount, acknowledged } = await expenses.updateOne({ UserID }, {
+        $inc: { totalAmount },
+        $pull: { ExpensesData: { id: itemsID } }
+    })
+    return { modifiedCount, matchedCount, acknowledged };
+}
 
 // =================== Budget Section ======================
 
@@ -278,6 +286,7 @@ module.exports = {
     createUserExpenses,
     pushUserExpenses,
     updateuserExpenses,
+    deleteUserExpenses,
     isExpensesExist,
 
     //Budget Operation

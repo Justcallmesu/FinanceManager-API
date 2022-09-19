@@ -15,6 +15,7 @@ const updateExpenses = require('./modules/Put/UpdateExpenses.js');
 
 // Delete
 const deleteBudget = require('./modules/Delete/BudgetDelete.js');
+const deleteExpenses = require('./modules/Delete/ExpensesDelete.js')
 
 // NPM Modules
 const express = require('express');
@@ -104,6 +105,22 @@ app.put('/:UserID/expenses', async function (req, res) {
 
     try {
         const { status, ...data } = await updateExpenses(UserID, requestInfo);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        console.log(error);
+        const { status, message } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
+    }
+    res.end();
+})
+
+
+app.delete('/:UserID/expenses', async function (req, res) {
+    const UserID = req.params.UserID;
+    const requestInfo = req.body;
+
+    try {
+        const { status, ...data } = await deleteExpenses(UserID, requestInfo);
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         console.log(error);
