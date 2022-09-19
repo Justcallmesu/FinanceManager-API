@@ -1,6 +1,9 @@
 // DB
 const db = require('../../Database/Mongoose.js');
 
+// Eror Handler
+const ErrorHandler = require('../../Class/Error/ErrorHandler.js');
+
 async function validateTheUser(userID) {
     const isExist = await db.isUserExist(userID);
     if (isExist) {

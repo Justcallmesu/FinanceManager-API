@@ -75,7 +75,7 @@ async function getExpiration(userID) {
 
 // Is user exist and authenticated
 async function isUserExist(userID) {
-    const foundUser = await users.find({ _id: userID });
+    const foundUser = await users.findOne({ _id: userID });
     return Boolean(foundUser);
 }
 
