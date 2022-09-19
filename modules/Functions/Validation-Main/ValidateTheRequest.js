@@ -25,7 +25,6 @@ async function validateTheRequest(UserID, requestInfo) {
 
     const isUserExist = await validateTheUser(UserID, requestInfo);
     const isTokenValidated = await validateTheToken(UserID, requestInfo);
-
     if (isTokenValidated && isUserExist) return true;
 }
 

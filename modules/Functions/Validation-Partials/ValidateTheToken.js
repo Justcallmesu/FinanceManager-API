@@ -16,6 +16,7 @@ async function validateTheToken(userID, requestInfo) {
             return true;
         }
     }
+    throw new ErrorHandler('Invalid Token', 'Your Token Doesnt Match Any Token', 401);
 }
 
 module.exports = validateTheToken;

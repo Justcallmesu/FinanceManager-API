@@ -96,6 +96,22 @@ async function getUserExpenses(userID, page, itemsPerPage) {
     return expensesData;
 }
 
+async function getExpensesAmount(UserID, ExpensesID) {
+    const data = await expenses.findOne({ UserID }, {
+        ExpensesData: {
+            $elemMatch: {
+                id: ExpensesID
+            }
+        }
+    })
+
+    if (!data) {
+        return null;
+    } else {
+        return data.ExpensesData[0].amount;
+    }
+}
+
 // Is Exist 
 async function isExpensesExist(UserID) {
     const isExist = await expenses.findOne({ UserID });
@@ -104,8 +120,8 @@ async function isExpensesExist(UserID) {
     return false;
 }
 
-// Update User Expenses
-async function updateUserExpenses(UserID, expensesData) {
+// Push User Expenses
+async function pushUserExpenses(UserID, expensesData) {
     const { amount } = expensesData;
     const { acknowledged, matchedCount } = await expenses.updateOne({ UserID },
         {
@@ -143,6 +159,21 @@ async function createUserExpenses(UserID, expensesData) {
     return false;
 }
 
+// Update User Expenses
+async function updateuserExpenses(UserID, newData, totalAmount) {
+    const { id } = newData;
+    const { acknowledged, matchedCount } = await expenses.updateOne({ UserID, "ExpensesData.id": id }, {
+        $inc: {
+            totalBudget: totalAmount
+        },
+        $set: {
+            "ExpensesData.$": newData
+        }
+    })
+    return { acknowledged, matchedCount };
+}
+
+
 // =================== Budget Section ======================
 
 // Get User Budget
@@ -177,9 +208,24 @@ async function createUserBudget(UserID, newData) {
     return { _id };
 }
 
+// Get Budget Amount
+async function getBudgetAmount(UserID, BudgetID) {
+    const data = await budgets.findOne({ UserID }, {
+        "BudgetData": {
+            $elemMatch: {
+                id: BudgetID
+            }
+        }
+    })
+    if (!data) {
+        return null;
+    } else {
+        return data.BudgetData[0].amount;
+    }
+}
 
-// Update User Budget
-async function updateUserBudget(UserID, newData) {
+// Push User Budget
+async function pushUserBudget(UserID, newData) {
     const { amount } = newData;
     const { acknowledged, matchedCount } = await budgets.updateOne({ UserID }, {
         $inc: {
@@ -193,7 +239,20 @@ async function updateUserBudget(UserID, newData) {
     return { acknowledged, matchedCount };
 }
 
+// Update User Budget
+async function updateUserBudget(UserID, newData, totalAmount) {
+    const { id } = newData;
+    const { acknowledged, matchedCount } = await budgets.updateOne({ UserID, "BudgetData.id": id }, {
+        $inc: {
+            totalBudget: totalAmount
+        },
+        $set: {
+            "BudgetData.$": newData
+        }
+    })
 
+    return { acknowledged, matchedCount };
+}
 
 
 module.exports = {
@@ -208,14 +267,18 @@ module.exports = {
 
     // Expenses Operation
     getUserExpenses,
-    isExpensesExist,
-    updateUserExpenses,
+    getExpensesAmount,
     createUserExpenses,
+    pushUserExpenses,
+    updateuserExpenses,
+    isExpensesExist,
 
     //Budget Operation
     getUserBudget,
-    isBudgetExist,
+    createUserBudget,
+    pushUserBudget,
     updateUserBudget,
-    createUserBudget
+    getBudgetAmount,
+    isBudgetExist,
 
 };
