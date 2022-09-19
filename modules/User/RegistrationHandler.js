@@ -31,7 +31,7 @@ function validateTheData(data) {
         for (const key in data) {
             if (key === 'name' && !(nameREGEX.test(data[key]))) {
                 throw new ErrorHandler("ValidationError", "Invalid Name Format", 400);
-            } else if (key === 'password' && !(passwordREGEX.test(data[key]) && data[key].length >= 5)) {
+            } else if (key === 'password' && !(passwordREGEX.test(data[key]) && data[key].length >= 8)) {
                 throw new ErrorHandler("ValidationError", "Invalid Password Format", 400);
             } else if (key === 'email' && !(emailREGEX.test(data[key]))) {
                 throw new ErrorHandler("ValidationError", "Invalid Email Format", 400);
