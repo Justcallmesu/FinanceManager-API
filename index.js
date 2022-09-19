@@ -5,8 +5,17 @@ const Success = require('./modules/Class/Response/Response.js');
 const Registration = require('./modules/User/RegistrationHandler');
 const Login = require('./modules/User/LoginHandler');
 
+// Post
 const ExpensesPost = require('./modules/Post/ExpensesPost.js');
 const BudgetPost = require('./modules/Post/BudgetPost.js');
+
+// Put
+const updateBudget = require('./modules/Put/UpdateBudget.js');
+const updateExpenses = require('./modules/Put/UpdateExpenses.js');
+
+// Delete
+const deleteBudget = require('./modules/Delete/BudgetDelete.js');
+const deleteExpenses = require('./modules/Delete/ExpensesDelete.js')
 
 // NPM Modules
 const express = require('express');
@@ -90,6 +99,36 @@ app.post('/:UserID/expenses', async function (req, res) {
     res.end();
 })
 
+app.put('/:UserID/expenses', async function (req, res) {
+    const UserID = req.params.UserID;
+    const requestInfo = req.body;
+
+    try {
+        const { status, ...data } = await updateExpenses(UserID, requestInfo);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        console.log(error);
+        const { status, message } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
+    }
+    res.end();
+})
+
+
+app.delete('/:UserID/expenses', async function (req, res) {
+    const UserID = req.params.UserID;
+    const requestInfo = req.body;
+
+    try {
+        const { status, ...data } = await deleteExpenses(UserID, requestInfo);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        console.log(error);
+        const { status, message } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
+    }
+    res.end();
+})
 
 // Budget
 app.get('/:UserID/budgets', async function (req, res) {
@@ -115,6 +154,35 @@ app.post('/:UserID/budgets', async function (req, res) {
         res.status(status).header(Headers).json({ status, ...data });
     } catch (error) {
         const { message, status } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
+    }
+    res.end();
+})
+
+app.put('/:UserID/budgets', async function (req, res) {
+    const UserID = req.params.UserID;
+    const requestInfo = req.body;
+
+    try {
+        const { status, ...data } = await updateBudget(UserID, requestInfo);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        const { status, message } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
+    }
+    res.end();
+})
+
+app.delete('/:UserID/budgets', async function (req, res) {
+    const UserID = req.params.UserID;
+    const requestInfo = req.body;
+
+    try {
+        const { status, ...data } = await deleteBudget(UserID, requestInfo);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        console.log(error);
+        const { status, message } = error;
         res.status(status || defaultStatus).header(Headers).json({ message, ...error });
     }
     res.end();
