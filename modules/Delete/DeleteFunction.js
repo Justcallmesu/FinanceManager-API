@@ -12,9 +12,10 @@ const validateTheToken = require('../Functions/Validation-Partials/ValidateTheTo
 const validateTheUser = require('../Functions/Validation-Partials/ValidateTheUser.js');
 
 async function deleteFunctions(UserID, requestInfo, deleteTarget) {
-
-    validateTheToken(UserID, requestInfo);
-    validateTheUser(UserID);
+    await Promise.all([
+        validateTheToken(UserID, requestInfo),
+        validateTheUser(UserID)
+    ])
 
     let getter = null;
     let method = null;

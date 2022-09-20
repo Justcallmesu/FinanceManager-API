@@ -7,10 +7,15 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 // DB
 const db = require('../Database/Mongoose.js');
 
-async function updateFunctions(UserID, requestInfo, PutTarget) {
+// Validation
+const validateTheToken = require('../Functions/Validation-Partials/ValidateTheToken.js');
+const validateTheUser = require('../Functions/Validation-Partials/ValidateTheUser.js');
 
-    validateTheToken(UserID, requestInfo);
-    validateTheUser(UserID);
+async function updateFunctions(UserID, requestInfo, PutTarget) {
+    await Promise.all([
+        validateTheToken(UserID, requestInfo),
+        validateTheUser(UserID)
+    ])
 
     let getter = null;
     let method = null;
