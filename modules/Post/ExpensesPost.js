@@ -15,10 +15,18 @@ async function addExpenses(UserID, requestInfo) {
     const isValid = await validateTheRequest(UserID, requestInfo);
     if (isValid) {
         let status = null;
-        const { data: { name, amount, date } } = requestInfo;
+        const [doesExist, totalBudget, totalExpenses] = await Promise.all([
+            db.isExpensesExist(UserID),
+            db.getTotalBudget(UserID),
+            db.getTotalExpenses(UserID)
+        ]);
 
+        const { data: { name, amount, date } } = requestInfo;
+        console.log(totalExpenses);
+        if ((totalExpenses + amount) >= totalBudget) {
+            throw new ErrorHandler("Invalid Data", "Total Expenses is Greater Than total Budget", 400);
+        }
         const expensesData = new BudgetExpensesConstructor(name, amount, date);
-        const doesExist = await db.isExpensesExist(UserID);
 
         if (doesExist) {
             status = await db.pushUserExpenses(UserID, expensesData);

@@ -96,6 +96,7 @@ async function getUserExpenses(userID, page, itemsPerPage) {
     return expensesData;
 }
 
+// Get Expenses Amount
 async function getExpensesAmount(UserID, ExpensesID) {
     const data = await expenses.findOne({ UserID }, {
         ExpensesData: {
@@ -109,6 +110,12 @@ async function getExpensesAmount(UserID, ExpensesID) {
     } else {
         return data.ExpensesData[0].amount;
     }
+}
+
+// Get Total Amount
+async function getTotalExpenses(UserID) {
+    const data = await expenses.findOne({ UserID });
+    return data.totalAmount;
 }
 
 // Is Exist 
@@ -200,6 +207,12 @@ async function isBudgetExist(UserID) {
     return false;
 }
 
+// Get total Budget Amount
+async function getTotalBudget(UserID) {
+    const data = await budgets.findOne({ UserID });
+    return data.totalBudget;
+}
+
 // Create User Budget
 async function createUserBudget(UserID, newData) {
     const { amount } = newData;
@@ -283,19 +296,25 @@ module.exports = {
     // Expenses Operation
     getUserExpenses,
     getExpensesAmount,
+    getTotalExpenses,
+
     createUserExpenses,
     pushUserExpenses,
+
     updateuserExpenses,
     deleteUserExpenses,
     isExpensesExist,
 
     //Budget Operation
     getUserBudget,
+    getTotalBudget,
+    getBudgetAmount,
+
     createUserBudget,
     pushUserBudget,
+
     updateUserBudget,
-    getBudgetAmount,
-    isBudgetExist,
-    deleteUserBudget
+    deleteUserBudget,
+    isBudgetExist
 
 };
