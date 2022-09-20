@@ -8,9 +8,10 @@ const ErrorHandler = require('../Class/Error/ErrorHandler.js');
 const db = require('../Database/Mongoose.js');
 
 async function updateFunctions(UserID, requestInfo, PutTarget) {
-
-    validateTheToken(UserID, requestInfo);
-    validateTheUser(UserID);
+    await Promise.all([
+        validateTheToken(UserID, requestInfo),
+        validateTheUser(UserID)
+    ])
 
     let getter = null;
     let method = null;
