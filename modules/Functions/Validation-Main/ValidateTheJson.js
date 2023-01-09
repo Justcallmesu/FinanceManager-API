@@ -7,7 +7,6 @@ function validateTheJSON(data, callback, propertiesRequirement) {
         const status = callback(key);
         counter++;
     }
-
     if (counter !== propertiesRequirement) {
         throw new ErrorHandler("ValidationError", "There are missing data or more", 400);
     }

@@ -18,10 +18,10 @@ async function validateTheRequest(userID, requestInfo) {
         }
     }
 
-    const isUserExist = await validateTheUser(userID, requestInfo);
-    const isTokenValidated = await validateTheToken(userID, requestInfo);
+    await validateTheUser(userID, requestInfo);
+    await validateTheToken(userID, requestInfo);
 
-    if (isTokenValidated && isUserExist) return true;
+    return true;
 }
 
 module.exports = validateTheRequest;

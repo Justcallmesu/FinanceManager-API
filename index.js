@@ -22,13 +22,16 @@ const cors = require('cors');
 
 // Functions
 const getFunction = require('./modules/Database-Getter/GetFunction.js');
+const getTotal = require('./modules/Database-Getter/getTotal.js');
 
 // Framework Initialization
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({ origin: 'http://localhost:8080/' }))
+app.use(cors({
+    origin: '*'
+}))
 
 // APP Variable
 app.set("port", process.env.PORT || 3000);
@@ -70,6 +73,17 @@ app.post('/login', async (req, res) => {
     res.end();
 })
 
+// General
+app.post('/:UserID/total', async function (req, res) {
+    const userId = req.params.UserID;
+    try {
+        const { status, ...data } = await getTotal(userId, req.body);
+        res.status(status).header(Headers).json({ status, ...data });
+    } catch (error) {
+        const { message, status } = error;
+        res.status(status || defaultStatus).header(Headers).json({ message, ...error });
+    }
+})
 
 // Expenses
 app.get('/:UserID/expenses', async function (req, res) {

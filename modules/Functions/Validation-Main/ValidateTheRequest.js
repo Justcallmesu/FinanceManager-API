@@ -12,7 +12,7 @@ async function validateTheRequest(UserID, requestInfo) {
     let counter = 0;
     const RequiredProperties = 3;
 
-    const isUserExist = await validateTheUser(UserID, requestInfo);
+    await validateTheUser(UserID, requestInfo);
 
     for (const key in requestInfo) {
         if (key !== 'token' && key !== 'page' && key !== 'itemsPerPage') {
@@ -25,9 +25,8 @@ async function validateTheRequest(UserID, requestInfo) {
         throw new ErrorHandler('Missing Data', 'Please include required data [Token,page,itemsPerPage]', 401);
     }
 
-
-    const isTokenValidated = await validateTheToken(UserID, requestInfo);
-    if (isTokenValidated && isUserExist) return true;
+    await validateTheToken(UserID, requestInfo);
+    return true;
 }
 
 module.exports = validateTheRequest;
