@@ -37,8 +37,8 @@ async function getUserData(data) {
 }
 
 
-function validateTheUser(data) {
-    const validated = validateTheJSON(data, (key) => {
+async function validateTheUser(data) {
+    const validated = await validateTheJSON(data, (key) => {
         if (key !== 'email' && key !== 'password') {
             throw new ErrorHandler("ValidationError", "Unknown Property", 400);
         }

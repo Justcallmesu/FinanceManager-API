@@ -112,18 +112,21 @@ async function getExpensesAmount(UserID, ExpensesID) {
     }
 }
 
-// Get Total Amount
-async function getTotalExpenses(UserID) {
-    const data = await expenses.findOne({ UserID });
-    return data.totalAmount;
-}
-
 // Is Exist 
 async function isExpensesExist(UserID) {
     const isExist = await expenses.findOne({ UserID });
 
     if (isExist) return true;
     return false;
+}
+
+// Get Total Amount
+async function getTotalExpenses(UserID) {
+    if (await isExpensesExist(UserID)) {
+        const data = await expenses.findOne({ UserID }, { _id: false, ExpensesData: false, UserID: false });
+        return data.totalAmount;
+    }
+    return null;
 }
 
 // Push User Expenses
@@ -209,8 +212,11 @@ async function isBudgetExist(UserID) {
 
 // Get total Budget Amount
 async function getTotalBudget(UserID) {
-    const data = await budgets.findOne({ UserID });
-    return data.totalBudget;
+    if (await isBudgetExist(UserID)) {
+        const data = await budgets.findOne({ UserID }, { _id: false, BudgetData: false, UserID: false });
+        return data.totalBudget;
+    }
+    return null;
 }
 
 // Create User Budget

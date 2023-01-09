@@ -19,7 +19,6 @@ async function addBudget(UserID, requestInfo) {
 
         const expensesData = new BudgetExpensesConstructor(name, amount, date);
         const doesExist = await db.isBudgetExist(UserID);
-
         if (doesExist) {
             status = await db.pushUserBudget(UserID, expensesData);
         } else {

@@ -22,9 +22,10 @@ async function addExpenses(UserID, requestInfo) {
         ]);
 
         const { data: { name, amount, date } } = requestInfo;
-        console.log(totalExpenses);
-        if ((totalExpenses + amount) >= totalBudget) {
-            throw new ErrorHandler("Invalid Data", "Total Expenses is Greater Than total Budget", 400);
+        if (totalBudget) {
+            if ((totalExpenses + amount) >= totalBudget) {
+                throw new ErrorHandler("Invalid Data", "Total Expenses is Greater Than total Budget", 400);
+            }
         }
         const expensesData = new BudgetExpensesConstructor(name, amount, date);
 
